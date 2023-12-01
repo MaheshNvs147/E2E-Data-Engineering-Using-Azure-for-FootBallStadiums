@@ -1,0 +1,20 @@
+# Use the official Apache Airflow image as a base
+FROM apache/airflow:2.6.0-python3.9
+
+# Switch to the root user to install build dependencies
+USER root
+
+# Install build dependencies
+RUN apt-get update && \
+    apt-get install -y gcc python3-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+# Switch back to the airflow user
+USER airflow
+
+# Set the working directory to /opt/airflow
+WORKDIR /opt/airflow
+
+# Copy and install Python packages from requirements.txt
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
